@@ -1,0 +1,41 @@
+name: birtakhabar
+description: "BirtaKhabar - Real-time local news and emergency alert app for Birtamode, Jhapa."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # State management
+  provider: ^6.1.2
+
+  # Firebase (Cloud Firestore, Auth, Messaging, Storage - per system architecture doc)
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.3
+  firebase_storage: ^12.3.2
+  firebase_messaging: ^15.1.3
+
+  # Utilities
+  share_plus: ^7.2.2
+  cached_network_image: ^3.4.1
+  image_picker: ^1.1.2
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+  flutter_local_notifications: ^18.0.1
+  connectivity_plus: ^6.0.5
+  shimmer: ^3.0.0
+  timeago: ^3.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

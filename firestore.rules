@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Security rules for BirtaKhabar.
+// - Anyone signed in can read published news, alerts, and business listings.
+// - Only admins (users/{uid}.role == "admin") can write news/alerts.
+// - Residents can submit news tips but only admins can review/update them.
+// - Each user can only read/write their own saved-articles subcollection.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+
+      match /saved/{articleId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    match /news/{articleId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /alerts/{alertId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /newsTips/{tipId} {
+      allow create: if isSignedIn();
+      allow read: if isSignedIn() &&
+        (resource.data.userId == request.auth.uid || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    match /businesses/{businessId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
